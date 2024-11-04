@@ -1,3 +1,5 @@
+scalar Date
+
 type Author {
     id: ID!
     name: String!
@@ -14,9 +16,5 @@ type Book {
 }
 
 type Query {
-    
-}
-
-type Mutation {
-    
+    sayHello: String
 }

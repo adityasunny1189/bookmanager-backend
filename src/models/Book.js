@@ -1,6 +1,6 @@
 import { DataTypes } from "sequelize";
-import { sequelize } from "../utils/database";
-import { Author } from "./Author";
+import { sequelize } from "../utils/database.js";
+import { Author } from "./Author.js";
 
 const Book = sequelize.define('Book', {
     id: {
