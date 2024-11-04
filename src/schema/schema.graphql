@@ -1,0 +1,22 @@
+type Author {
+    id: ID!
+    name: String!
+    biography: String!
+    bornDate: Date!
+}
+
+type Book {
+    id: ID!
+    title: String!
+    description: String!
+    publishedDate: Date!
+    author: Author!
+}
+
+type Query {
+    
+}
+
+type Mutation {
+    
+}
