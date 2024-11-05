@@ -9,6 +9,7 @@ import Book from './models/Book.js';
 import Author from './models/Author.js';
 import associateModels from './models/models.js';
 import { sequelize } from './utils/database.js';
+import { bookLoader } from './loaders/bookLoader.js';
 
 
 const models = {Book, Author};
@@ -48,7 +49,8 @@ app.use("/graphql", expressMiddleware(graphqlServer, {
     context: ({ req }) => {
         return {
             loaders: {
-                authorLoader: authorLoader
+                authorLoader: authorLoader,
+                bookLoader: bookLoader
             },
             name: "Bookmanager Context"
         }

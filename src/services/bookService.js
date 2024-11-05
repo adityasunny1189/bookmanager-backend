@@ -1,8 +1,7 @@
 import Book from "../models/Book.js";
 
-class bookServiceClass {
+class BookServiceClass {
     async createBook({ title, description, publishedDate }) {
-        console.log("Args value: ", title, description, publishedDate);
         return await Book.create({
             title: title,
             description: description,
@@ -10,7 +9,7 @@ class bookServiceClass {
         });
     }
 
-    async getBooks() {
+    async getBooks({ filter, page, limit, offset }) {
         return await Book.findAll();
     }
 
@@ -19,4 +18,4 @@ class bookServiceClass {
     }
 }
 
-export const bookService = new bookServiceClass();
+export const BookService = new BookServiceClass();

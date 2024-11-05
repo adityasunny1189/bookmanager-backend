@@ -1,5 +1,6 @@
 import { GraphQLScalarType, Kind } from "graphql";
-import { bookService } from "../services/bookService.js";
+import { BookService } from "../services/bookService.js";
+import { AuthorService } from "../services/authorService.js";
 
 export const resolvers = {
     Date: new GraphQLScalarType({
@@ -24,19 +25,28 @@ export const resolvers = {
         }
     },
     Author: {
-        books: async (parent) => {
-            return await parent.getBooks();
+        books: async (parent, args, context) => {
+            return await context.bookLoader.load(parent.bookId);
         }
     },
     Query: {
         sayHello: () => "Hello World",
-        getBooks: async () => {
-            return await bookService.getBooks();
+        getBooks: async (parent, args) => {
+            return await BookService.getBooks(args);
         },
+        getBookById: async (parent, args) => {
+            return await BookService.getBookById(args.id);
+        },
+        getAuthors: async (parent, args) => {
+            return await AuthorService.getAuthors(args);
+        },
+        getAuthorById: async (parent, args) => {
+            return await AuthorService.getAuthorById(args.id);
+        }
     },
     Mutation: {
         createBook: async (parent, args) => {
-            return await bookService.createBook(args);
+            return await BookService.createBook(args);
         }
     }
 }
