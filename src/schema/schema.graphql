@@ -16,11 +16,23 @@ type Book {
     authors: [Author!]
 }
 
+type BookPage {
+    books: [Book!]
+    totalPage: Int
+    currentPage: Int
+}
+
+type AuthorPage {
+    authors: [Author!]
+    totalPage: Int
+    currentPage: Int
+}
+
 type Query {
     sayHello: String
-    getBooks(filter: String, page: Int, limit: Int): [Book]
+    getBooks(filter: String, page: Int, limit: Int): BookPage
     getBookById(id: ID!): Book
-    getAuthors(filter: String, page: Int, limit: Int): [Author]
+    getAuthors(filter: String, page: Int, limit: Int): AuthorPage
     getAuthorById(id: ID!): Author
 }
 
@@ -32,5 +44,4 @@ type Mutation {
     updateAuthor(id: ID!, name: String, biography: String, bornDate: Date): Author
     deleteAuthor(id: ID!): Author
     addAuthorToBook(bookId: ID!, authorId: ID!): Book
-    addBookToAuthor(authorId: ID!, bookId: ID!): Author
 }

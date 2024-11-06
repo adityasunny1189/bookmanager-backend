@@ -1,12 +1,19 @@
 import DataLoader from "dataloader";
 import Book from "../models/Book.js";
 
-export const bookLoader = new DataLoader(async (bookIds) => {
+export const bookLoader = new DataLoader(async (authorIds) => {
     const books = await Book.findAll({
-        where: {
-            id: bookIds
+        where: { authorId: authorIds },
+    });
+
+    const authorBookMap = new Map();
+    books.forEach((book) => {
+        if (!authorBookMap.has(book.authorId)) {
+            authorBookMap.set(book.authorId, [book]);
+        } else {
+            authorBookMap.get(book.authorId).push(book);
         }
     });
-    const bookMap = new Map(books.map(book => [book.id, book]));
-    return bookIds.map(bookId => bookMap.get(bookId));
+
+    return authorIds.map(authorId => authorBookMap.get(authorId) || []);
 });

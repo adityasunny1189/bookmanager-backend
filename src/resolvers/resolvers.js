@@ -21,12 +21,12 @@ export const resolvers = {
     }),
     Book: {
         authors: async (parent, args, context) => {
-            return await context.authorLoader.load(parent.authorId);
+            return await context.loaders.authorLoader.load(parent.id);
         }
     },
     Author: {
         books: async (parent, args, context) => {
-            return await context.bookLoader.load(parent.bookId);
+            return await context.loaders.bookLoader.load(parent.id);
         }
     },
     Query: {
@@ -47,6 +47,24 @@ export const resolvers = {
     Mutation: {
         createBook: async (parent, args) => {
             return await BookService.createBook(args);
+        },
+        updateBook: async (parent, args) => {
+            return await BookService.updateBook(args.id, args);
+        },
+        deleteBook: async (parent, args) => {
+            return await BookService.deleteBook(args.id);
+        },
+        createAuthor: async (parent, args) => {
+            return await AuthorService.createAuthor(args);
+        },
+        updateAuthor: async (parent, args) => {
+            return await AuthorService.updateAuthor(args.id, args);
+        },
+        deleteAuthor: async (parent, args) => {
+            return await AuthorService.deleteAuthor(args.id);
+        },
+        addAuthorToBook: async (parent, args, { loaders }) => {
+            return await BookService.addAuthorToBook(args.authorId, args.bookId, loaders);
         }
     }
 }

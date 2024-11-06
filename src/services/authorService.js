@@ -1,3 +1,4 @@
+import { Sequelize } from "sequelize";
 import Author from "../models/Author.js";
 
 
@@ -10,8 +11,70 @@ class AuthorServiceClass {
         });
     }
 
-    async getAuthors({ filter, page, limit, offset }) {
-        return await Author.findAll();
+    async updateAuthor(id, { name, biography, bornDate }) {
+        const author = await Author.findByPk(id);
+        if (!author) {
+            throw new Error('Author not found');
+        }
+
+        await Author.update({
+            name: name,
+            biography: biography,
+            bornDate: bornDate
+        }, {
+            where: {
+                id: id
+            }
+        });
+
+        author = await Author.findByPk(id);
+        return author;
+    }
+
+    async deleteAuthor(id) {
+        const author = await Author.findByPk(id);
+        if (!author) {
+            throw new Error('Author not found');
+        }
+
+        await Author.destroy({
+            where: {
+                id: id
+            }
+        });
+
+        return author;
+    }
+
+    async getAuthors({ filter = {}, page = 1, limit = 10 }) {
+        const offset = (page - 1) * limit;
+
+        const where = {};
+        if (filter.name) {
+            where.name = {
+                [Sequelize.Op.like]: `%${filter.name}%`, 
+            };
+        }
+
+        if (filter.bornDate) {
+            where.bornDate = filter.bornDate;
+        }
+
+        const authors = await Author.findAll({
+            where,
+            limit,
+            offset,
+            order: [['name', 'ASC']],
+        });
+
+        const totalAuthors = authors.length;
+        console.log("Total authors: ", totalAuthors);
+
+        return {
+            authors,
+            totalPages: Math.ceil(totalAuthors / limit),
+            currentPage: page,
+        };
     }
 
     async getAuthorById(id) {
