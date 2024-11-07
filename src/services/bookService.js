@@ -11,7 +11,7 @@ class BookServiceClass {
         });
     }
 
-    async updateBook(id, { title, description, publishedDate }) {
+    async updateBook(id, { title, description, publishedDate }, loaders) {
         const book = await Book.findByPk(id);
         if (!book) {
             throw new Error('Book not found');
@@ -27,11 +27,12 @@ class BookServiceClass {
             }
         });
 
-        book = await Book.findByPk(id);
-        return book;
+        loaders.bookLoader.clear(id);
+
+        return await Book.findByPk(id);
     }
 
-    async deleteBook(id) {
+    async deleteBook(id, loaders) {
         const book = await Book.findByPk(id);
         if (!book) {
             throw new Error('Book not found');
@@ -42,6 +43,8 @@ class BookServiceClass {
                 id: id
             }
         });
+
+        loaders.bookLoader.clear(id);
 
         return book;
     }
@@ -61,7 +64,7 @@ class BookServiceClass {
 
         // clear the dataloader cache
         loaders.authorLoader.clear(bookId);
-        
+
         return await Book.findByPk(bookId);
     }
 

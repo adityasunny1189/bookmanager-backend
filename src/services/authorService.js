@@ -11,7 +11,7 @@ class AuthorServiceClass {
         });
     }
 
-    async updateAuthor(id, { name, biography, bornDate }) {
+    async updateAuthor(id, { name, biography, bornDate }, loaders) {
         const author = await Author.findByPk(id);
         if (!author) {
             throw new Error('Author not found');
@@ -27,11 +27,12 @@ class AuthorServiceClass {
             }
         });
 
-        author = await Author.findByPk(id);
-        return author;
+        loaders.authorLoader.clear(id);
+
+        return await Author.findByPk(id);
     }
 
-    async deleteAuthor(id) {
+    async deleteAuthor(id, loaders) {
         const author = await Author.findByPk(id);
         if (!author) {
             throw new Error('Author not found');
@@ -42,6 +43,8 @@ class AuthorServiceClass {
                 id: id
             }
         });
+
+        loaders.authorLoader.clear(id);
 
         return author;
     }

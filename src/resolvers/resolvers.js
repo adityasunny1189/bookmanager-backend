@@ -48,20 +48,20 @@ export const resolvers = {
         createBook: async (parent, args) => {
             return await BookService.createBook(args);
         },
-        updateBook: async (parent, args) => {
-            return await BookService.updateBook(args.id, args);
+        updateBook: async (parent, args, { loaders }) => {
+            return await BookService.updateBook(args.id, args, loaders);
         },
-        deleteBook: async (parent, args) => {
-            return await BookService.deleteBook(args.id);
+        deleteBook: async (parent, args, { loaders }) => {
+            return await BookService.deleteBook(args.id, loaders);
         },
         createAuthor: async (parent, args) => {
             return await AuthorService.createAuthor(args);
         },
-        updateAuthor: async (parent, args) => {
-            return await AuthorService.updateAuthor(args.id, args);
+        updateAuthor: async (parent, args, { loaders }) => {
+            return await AuthorService.updateAuthor(args.id, args, loaders);
         },
-        deleteAuthor: async (parent, args) => {
-            return await AuthorService.deleteAuthor(args.id);
+        deleteAuthor: async (parent, args, { loaders }) => {
+            return await AuthorService.deleteAuthor(args.id, loaders);
         },
         addAuthorToBook: async (parent, args, { loaders }) => {
             return await BookService.addAuthorToBook(args.authorId, args.bookId, loaders);
