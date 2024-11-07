@@ -64,6 +64,7 @@ class BookServiceClass {
 
         // clear the dataloader cache
         loaders.authorLoader.clear(bookId);
+        loaders.bookLoader.clear(authorId);
 
         return await Book.findByPk(bookId);
     }
