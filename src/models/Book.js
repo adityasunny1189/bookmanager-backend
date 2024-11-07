@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../utils/database.js";
-import { Author } from "./Author.js";
 
 const Book = sequelize.define('Book', {
     id: {
@@ -22,7 +21,5 @@ const Book = sequelize.define('Book', {
         allowNull: false
     }
 });
-
-Book.belongsTo(Author, {foreignKey: 'authorId', as: 'author'});
 
 export default Book;
