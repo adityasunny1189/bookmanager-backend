@@ -22,6 +22,9 @@ export const resolvers = {
     Book: {
         authors: async (parent, args, context) => {
             return await context.loaders.authorLoader.load(parent.id);
+        },
+        reviewsAndRating: async (parent, args, context) => {
+            return await context.loaders.reviewLoader.load(parent.id);
         }
     },
     Author: {
@@ -65,6 +68,9 @@ export const resolvers = {
         },
         addAuthorToBook: async (parent, args, { loaders }) => {
             return await BookService.addAuthorToBook(args.authorId, args.bookId, loaders);
+        },
+        addReviewAndRatingToBook: async (parent, args, { loaders }) => {
+            return await BookService.addReviewAndRatingToBook(args.bookId, args.userId, args.review, args.rating, loaders);
         }
     }
 }
