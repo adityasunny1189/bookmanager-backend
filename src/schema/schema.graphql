@@ -14,6 +14,15 @@ type Book {
     description: String!
     publishedDate: Date!
     authors: [Author!]
+    reviewsAndRating: [BookReviewsAndRating!]
+}
+
+type BookReviewsAndRating {
+    id: ID!
+    bookId: ID!
+    userId: ID!
+    review: String!
+    rating: Int!
 }
 
 type BookPage {
@@ -44,4 +53,5 @@ type Mutation {
     updateAuthor(id: ID!, name: String, biography: String, bornDate: Date): Author
     deleteAuthor(id: ID!): Author
     addAuthorToBook(bookId: ID!, authorId: ID!): Book
+    addReviewAndRatingToBook(bookId: ID!, userId: ID!, review: String!, rating: Int!): Book
 }

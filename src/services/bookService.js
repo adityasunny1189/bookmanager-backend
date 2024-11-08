@@ -1,6 +1,8 @@
 import { Sequelize } from "sequelize";
 import Book from "../models/Book.js";
 import Author from "../models/Author.js";
+import { BookReviewsAndRating } from "../models/metadata.js";
+import { v4 as uuid } from "uuid";
 
 class BookServiceClass {
     async createBook({ title, description, publishedDate }) {
@@ -104,6 +106,27 @@ class BookServiceClass {
 
     async getBookById(id) {
         return await Book.findByPk(id);
+    }
+
+    async addReviewAndRatingToBook(bookId, userId, review, rating, loaders) {
+        const book = await Book.findByPk(bookId);
+        if (!book) {
+            throw new Error('Book not found');
+        }
+
+        const reviewAndRating = new BookReviewsAndRating({
+            reviewId: uuid(),
+            bookId: bookId,
+            userId: userId,
+            review: review,
+            rating: rating
+        });
+
+        await reviewAndRating.save();
+
+        loaders.reviewLoader.clear(bookId);
+
+        return await Book.findByPk(bookId);
     }
 }
 

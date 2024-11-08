@@ -10,11 +10,14 @@ import Author from './models/Author.js';
 import associateModels from './models/models.js';
 import { sequelize } from './utils/database.js';
 import { bookLoader } from './loaders/bookLoader.js';
+import { connect } from 'mongoose';
+import { reviewLoader } from './loaders/reviewLoader.js';
 
-
+// Create models association
 const models = {Book, Author};
 associateModels(models);
 
+// Initialize sequelize (connect to the database)
 sequelize
     .sync()
     .then(() => {
@@ -22,8 +25,23 @@ sequelize
     })
     .catch((error) => {
         console.log("Error Creating tables: ", error);
+        process.exit(1);
     });
 
+// Initialize mongoose (connect to the database)
+const MONGO_DB_PATH = process.env.MONGO_DB_PATH;
+
+connect(MONGO_DB_PATH, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then((data) => {
+    console.log("connected to mongo db");
+}).catch(err => {
+    console.log("Error connecting to mongo DB: ", err);
+    process.exit(1);
+});
+
+// Create an express app
 export const app = express();
 
 app.use(json());
@@ -32,6 +50,7 @@ app.use(cors({
     origin: '*'
 }));
 
+// Create an Apollo Graphql Server
 const graphqlServer = new ApolloServer({
     typeDefs,
     resolvers
@@ -50,7 +69,8 @@ app.use("/graphql", expressMiddleware(graphqlServer, {
         return {
             loaders: {
                 authorLoader: authorLoader,
-                bookLoader: bookLoader
+                bookLoader: bookLoader,
+                reviewLoader: reviewLoader
             },
             name: "Bookmanager Context"
         }
