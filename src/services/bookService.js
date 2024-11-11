@@ -87,7 +87,7 @@ class BookServiceClass {
             where: authorFilter
         });
 
-        console.log("Book Ids: ", JSON.stringify(booksIds));
+        console.log("Book Ids: ", JSON.stringify(booksIds)); 
 
         if (filter.publishedDate) {
             where.publishedDate = filter.publishedDate;
