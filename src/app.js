@@ -12,6 +12,8 @@ import { sequelize } from './utils/database.js';
 import { bookLoader } from './loaders/bookLoader.js';
 import { connect } from 'mongoose';
 import { reviewLoader } from './loaders/reviewLoader.js';
+import { config } from 'dotenv';
+config({ path: './src/config.env' });
 
 // Create models association
 const models = {Book, Author};

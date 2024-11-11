@@ -37,9 +37,14 @@ type AuthorPage {
     currentPage: Int
 }
 
+input BookFilter {
+    authorId: ID
+    publishedDate: Date
+}
+
 type Query {
     sayHello: String
-    getBooks(filter: String, page: Int, limit: Int): BookPage
+    getBooks(filter: BookFilter, page: Int, limit: Int): BookPage
     getBookById(id: ID!): Book
     getAuthors(filter: String, page: Int, limit: Int): AuthorPage
     getAuthorById(id: ID!): Author

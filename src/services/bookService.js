@@ -3,6 +3,7 @@ import Book from "../models/Book.js";
 import Author from "../models/Author.js";
 import { BookReviewsAndRating } from "../models/metadata.js";
 import { v4 as uuid } from "uuid";
+import BookAuthor from "../models/BookAuthor.js";
 
 class BookServiceClass {
     async createBook({ title, description, publishedDate }) {
@@ -75,27 +76,43 @@ class BookServiceClass {
         const offset = (page - 1) * limit;
 
         const where = {};
-        // if (filter.title) {
-        //     where.title = {
-        //         [Sequelize.Op.like]: `%${filter.title}%`, 
-        //     };
-        // }
-        // if (filter.authorId) {
-        //     where.authorId = filter.authorId;
-        // }
-        // if (filter.publishedDate) {
-        //     where.publishedDate = filter.publishedDate;
-        // }
+        const authorFilter = {};
+        let findByAuthor = false;
+        if (filter.authorId) {
+            authorFilter.authorId = filter.authorId;
+            findByAuthor = true;
+        }
 
-        const books = await Book.findAll({
+        const booksIds = await BookAuthor.findAll({
+            where: authorFilter
+        });
+
+        console.log("Book Ids: ", JSON.stringify(booksIds));
+
+        if (filter.publishedDate) {
+            where.publishedDate = filter.publishedDate;
+        }
+
+        console.log("Filter: ", filter);
+
+        let books = await Book.findAll({
             where,
             limit,
             offset,
             order: [['title', 'ASC']],
         });
 
+        console.log("Books: ", JSON.stringify(books));
+
+        if (findByAuthor) {
+            books = books.filter(book => {
+                return booksIds.find(data => data.BookId === book.id);
+            });
+        }
+
         const totalBooks = books.length;
-        console.log("Total books: ", totalBooks);
+        console.log("Total books: ", totalBooks, " total pages: ", Math.ceil(totalBooks / limit));
+        console.log("Books: ", JSON.stringify(books));
 
         return {
             books,
