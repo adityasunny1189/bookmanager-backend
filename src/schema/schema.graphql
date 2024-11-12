@@ -42,11 +42,16 @@ input BookFilter {
     publishedDate: Date
 }
 
+input AuthorFilter {
+    bookId: ID
+    bornDate: Date
+}
+
 type Query {
     sayHello: String
     getBooks(filter: BookFilter, page: Int, limit: Int): BookPage
     getBookById(id: ID!): Book
-    getAuthors(filter: String, page: Int, limit: Int): AuthorPage
+    getAuthors(filter: AuthorFilter, page: Int, limit: Int): AuthorPage
     getAuthorById(id: ID!): Author
 }
 

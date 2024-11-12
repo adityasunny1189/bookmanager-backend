@@ -1,5 +1,6 @@
 import { Sequelize } from "sequelize";
 import Author from "../models/Author.js";
+import BookAuthor from "../models/BookAuthor.js";
 
 
 class AuthorServiceClass {
@@ -53,22 +54,35 @@ class AuthorServiceClass {
         const offset = (page - 1) * limit;
 
         const where = {};
-        if (filter.name) {
-            where.name = {
-                [Sequelize.Op.like]: `%${filter.name}%`, 
-            };
+        const bookFilter = {};
+        let findByBook = false;
+        if(filter.bookId) {
+            bookFilter.bookId = filter.bookId;
+            findByBook = true;
         }
+
+        const authorIds = await BookAuthor.findAll({
+            where: bookFilter
+        });
+
+        console.log("Author Ids: ", JSON.stringify(authorIds));
 
         if (filter.bornDate) {
             where.bornDate = filter.bornDate;
         }
 
-        const authors = await Author.findAll({
+        let authors = await Author.findAll({
             where,
             limit,
             offset,
             order: [['name', 'ASC']],
         });
+
+        if(findByBook) {
+            authors = authors.filter(author => {
+                return authorIds.find(data => data.AuthorId === author.id);
+            });
+        }
 
         const totalAuthors = authors.length;
         console.log("Total authors: ", totalAuthors);
