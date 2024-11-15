@@ -13,7 +13,9 @@ if (ENV === "development") {
     console.log("Connecting to development DB");
 }
 
-export const sequelize = new Sequelize(DB_PATH);
+export const sequelize = new Sequelize(DB_PATH, {
+    dialect: "postgres",
+});
 
 try {
     await sequelize.authenticate();
