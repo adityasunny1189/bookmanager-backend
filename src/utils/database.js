@@ -1,9 +1,19 @@
 import { Sequelize } from "sequelize";
+import { config } from "dotenv";
+config({ path: "./src/config.env" });
 
-const DB_PATH = process.env.DB_PATH;
-const DEV_DB_PATH = 'sqlite::memory:';
+const PROD_DB_PATH = process.env.PROD_DB_PATH;
+const ENV = process.env.ENV;
+console.log("Env: ", ENV);
 
-export const sequelize = new Sequelize(DEV_DB_PATH);
+let DB_PATH = "sqlite::memory:";
+
+if (ENV === "production") {
+    DB_PATH = PROD_DB_PATH;
+    console.log("Connecting to production DB");
+}
+
+export const sequelize = new Sequelize(DB_PATH);
 
 try {
     await sequelize.authenticate();

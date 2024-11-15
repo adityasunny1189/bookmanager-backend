@@ -10,25 +10,28 @@ class BookServiceClass {
         return await Book.create({
             title: title,
             description: description,
-            publishedDate: publishedDate
+            publishedDate: publishedDate,
         });
     }
 
     async updateBook(id, { title, description, publishedDate }, loaders) {
         const book = await Book.findByPk(id);
         if (!book) {
-            throw new Error('Book not found');
+            throw new Error("Book not found");
         }
 
-        await Book.update({
-            title: title,
-            description: description,
-            publishedDate: publishedDate
-        }, {
-            where: {
-                id: id
+        await Book.update(
+            {
+                title: title,
+                description: description,
+                publishedDate: publishedDate,
+            },
+            {
+                where: {
+                    id: id,
+                },
             }
-        });
+        );
 
         loaders.bookLoader.clear(id);
 
@@ -38,13 +41,13 @@ class BookServiceClass {
     async deleteBook(id, loaders) {
         const book = await Book.findByPk(id);
         if (!book) {
-            throw new Error('Book not found');
+            throw new Error("Book not found");
         }
 
         await Book.destroy({
             where: {
-                id: id
-            }
+                id: id,
+            },
         });
 
         loaders.bookLoader.clear(id);
@@ -55,12 +58,12 @@ class BookServiceClass {
     async addAuthorToBook(authorId, bookId, loaders) {
         const book = await Book.findByPk(bookId);
         if (!book) {
-            throw new Error('Book not found');
+            throw new Error("Book not found");
         }
 
         const author = await Author.findByPk(authorId);
         if (!author) {
-            throw new Error('Author not found');
+            throw new Error("Author not found");
         }
 
         await book.addAuthor(author);
@@ -84,7 +87,7 @@ class BookServiceClass {
         }
 
         const booksIds = await BookAuthor.findAll({
-            where: authorFilter
+            where: authorFilter,
         });
 
         console.log("Book Ids: ", JSON.stringify(booksIds));
@@ -99,19 +102,24 @@ class BookServiceClass {
             where,
             limit,
             offset,
-            order: [['title', 'ASC']],
+            order: [["title", "ASC"]],
         });
 
         console.log("Books: ", JSON.stringify(books));
 
         if (findByAuthor) {
-            books = books.filter(book => {
-                return booksIds.find(data => data.BookId === book.id);
+            books = books.filter((book) => {
+                return booksIds.find((data) => data.BookId === book.id);
             });
         }
 
         const totalBooks = books.length;
-        console.log("Total books: ", totalBooks, " total pages: ", Math.ceil(totalBooks / limit));
+        console.log(
+            "Total books: ",
+            totalBooks,
+            " total pages: ",
+            Math.ceil(totalBooks / limit)
+        );
         console.log("Books: ", JSON.stringify(books));
 
         return {
@@ -128,15 +136,15 @@ class BookServiceClass {
     async addReviewAndRatingToBook(bookId, userId, review, rating, loaders) {
         const book = await Book.findByPk(bookId);
         if (!book) {
-            throw new Error('Book not found');
+            throw new Error("Book not found");
         }
 
         const reviewAndRating = new BookReviewsAndRating({
-            reviewId: uuid(),
+            id: uuid(),
             bookId: bookId,
             userId: userId,
             review: review,
-            rating: rating
+            rating: rating,
         });
 
         await reviewAndRating.save();
