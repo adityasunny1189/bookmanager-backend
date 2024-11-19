@@ -1,6 +1,10 @@
 scalar Date
 
-type Author {
+interface Node {
+    id: ID!
+}
+
+type Author implements Node {
     id: ID!
     name: String!
     biography: String!
@@ -56,12 +60,33 @@ type Query {
 }
 
 type Mutation {
-    createBook(title: String!, description: String!, publishedDate: Date!, authorIds: [ID!]): Book
-    updateBook(id: ID!, title: String, description: String, publishedDate: Date, authorIds: [ID!]): Book
+    createBook(
+        title: String!
+        description: String!
+        publishedDate: Date!
+        authorIds: [ID!]
+    ): Book
+    updateBook(
+        id: ID!
+        title: String
+        description: String
+        publishedDate: Date
+        authorIds: [ID!]
+    ): Book
     deleteBook(id: ID!): Book
     createAuthor(name: String!, biography: String!, bornDate: Date!): Author
-    updateAuthor(id: ID!, name: String, biography: String, bornDate: Date): Author
+    updateAuthor(
+        id: ID!
+        name: String
+        biography: String
+        bornDate: Date
+    ): Author
     deleteAuthor(id: ID!): Author
     addAuthorToBook(bookId: ID!, authorId: ID!): Book
-    addReviewAndRatingToBook(bookId: ID!, userId: ID!, review: String!, rating: Int!): Book
+    addReviewAndRatingToBook(
+        bookId: ID!
+        userId: ID!
+        review: String!
+        rating: Int!
+    ): Book
 }

@@ -1,5 +1,5 @@
-import { sequelize } from "../utils/database.js";
+import sequelize from "../utils/database.js";
 
-const BookAuthor = sequelize.define('BookAuthor', {});
+const BookAuthor = sequelize.define("BookAuthor", {});
 
 export default BookAuthor;
