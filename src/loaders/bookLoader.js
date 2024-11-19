@@ -4,6 +4,7 @@ import Author from "../models/Author.js";
 
 export default function newBookDataLoader() {
     return new DataLoader(async (authorIds) => {
+        console.log("AuthorIds: ", authorIds);
         const authorWithBooks = await Author.findAll({
             where: { id: authorIds },
             include: {
@@ -12,11 +13,10 @@ export default function newBookDataLoader() {
             },
         });
 
-        const authorBookMap = new Map();
-        authorWithBooks.forEach((author) => {
-            authorBookMap.set(author.id, author.books);
+        return authorIds.map((authorId) => {
+            return authorWithBooks
+                .filter((author) => author.id === authorId)
+                .flatMap((author) => author.books);
         });
-
-        return authorIds.map((authorId) => authorBookMap.get(authorId) || []);
     });
 }
