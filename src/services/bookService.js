@@ -14,7 +14,7 @@ class BookServiceClass {
         });
     }
 
-    async updateBook(id, { title, description, publishedDate }, loaders) {
+    async updateBook({ id, title, description, publishedDate }) {
         const book = await Book.findByPk(id);
         if (!book) {
             throw new Error("Book not found");
@@ -33,12 +33,10 @@ class BookServiceClass {
             }
         );
 
-        loaders.bookLoader.clear(id);
-
         return await Book.findByPk(id);
     }
 
-    async deleteBook(id, loaders) {
+    async deleteBook({ id }) {
         const book = await Book.findByPk(id);
         if (!book) {
             throw new Error("Book not found");
@@ -50,12 +48,10 @@ class BookServiceClass {
             },
         });
 
-        loaders.bookLoader.clear(id);
-
         return book;
     }
 
-    async addAuthorToBook(authorId, bookId, loaders) {
+    async addAuthorToBook({ authorId, bookId }) {
         const book = await Book.findByPk(bookId);
         if (!book) {
             throw new Error("Book not found");
@@ -67,11 +63,6 @@ class BookServiceClass {
         }
 
         await book.addAuthor(author);
-
-        // clear the dataloader cache
-        loaders.authorLoader.clear(bookId);
-        loaders.bookLoader.clear(authorId);
-
         return await Book.findByPk(bookId);
     }
 
@@ -129,11 +120,11 @@ class BookServiceClass {
         };
     }
 
-    async getBookById(id) {
+    async getBookById({ id }) {
         return await Book.findByPk(id);
     }
 
-    async addReviewAndRatingToBook(bookId, userId, review, rating, loaders) {
+    async addReviewAndRatingToBook({ bookId, userId, review, rating }) {
         const book = await Book.findByPk(bookId);
         if (!book) {
             throw new Error("Book not found");
@@ -148,9 +139,6 @@ class BookServiceClass {
         });
 
         await reviewAndRating.save();
-
-        loaders.reviewLoader.clear(bookId);
-
         return await Book.findByPk(bookId);
     }
 }

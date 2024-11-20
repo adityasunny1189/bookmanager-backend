@@ -1,5 +1,5 @@
 export const authorResolver = {
-    books: async (parent, args, context) => {
-        return await context.loaders.bookLoader.load(parent.id);
+    books: async (author, _args, context) => {
+        return await context.loaders.bookLoader.load(author.id);
     },
 };

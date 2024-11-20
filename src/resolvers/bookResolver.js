@@ -1,8 +1,8 @@
 export const bookResolver = {
-    authors: async (parent, args, context) => {
-        return await context.loaders.authorLoader.load(parent.id);
+    authors: async (book, _args, context) => {
+        return await context.loaders.authorLoader.load(book.id);
     },
-    reviewsAndRating: async (parent, args, context) => {
-        return await context.loaders.reviewLoader.load(parent.id);
+    reviewsAndRating: async (book, _args, context) => {
+        return await context.loaders.reviewLoader.load(book.id);
     },
 };

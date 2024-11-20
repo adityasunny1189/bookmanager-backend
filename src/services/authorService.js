@@ -2,50 +2,48 @@ import { Sequelize } from "sequelize";
 import Author from "../models/Author.js";
 import BookAuthor from "../models/BookAuthor.js";
 
-
 class AuthorServiceClass {
     async createAuthor({ name, biography, bornDate }) {
         return await Author.create({
             name: name,
             biography: biography,
-            bornDate: bornDate
+            bornDate: bornDate,
         });
     }
 
-    async updateAuthor(id, { name, biography, bornDate }, loaders) {
+    async updateAuthor({ id, name, biography, bornDate }) {
         const author = await Author.findByPk(id);
         if (!author) {
-            throw new Error('Author not found');
+            throw new Error("Author not found");
         }
 
-        await Author.update({
-            name: name,
-            biography: biography,
-            bornDate: bornDate
-        }, {
-            where: {
-                id: id
+        await Author.update(
+            {
+                name: name,
+                biography: biography,
+                bornDate: bornDate,
+            },
+            {
+                where: {
+                    id: id,
+                },
             }
-        });
-
-        loaders.authorLoader.clear(id);
+        );
 
         return await Author.findByPk(id);
     }
 
-    async deleteAuthor(id, loaders) {
+    async deleteAuthor({ id }) {
         const author = await Author.findByPk(id);
         if (!author) {
-            throw new Error('Author not found');
+            throw new Error("Author not found");
         }
 
         await Author.destroy({
             where: {
-                id: id
-            }
+                id: id,
+            },
         });
-
-        loaders.authorLoader.clear(id);
 
         return author;
     }
@@ -56,13 +54,13 @@ class AuthorServiceClass {
         const where = {};
         const bookFilter = {};
         let findByBook = false;
-        if(filter.bookId) {
+        if (filter.bookId) {
             bookFilter.bookId = filter.bookId;
             findByBook = true;
         }
 
         const authorIds = await BookAuthor.findAll({
-            where: bookFilter
+            where: bookFilter,
         });
 
         console.log("Author Ids: ", JSON.stringify(authorIds));
@@ -75,12 +73,12 @@ class AuthorServiceClass {
             where,
             limit,
             offset,
-            order: [['name', 'ASC']],
+            order: [["name", "ASC"]],
         });
 
-        if(findByBook) {
-            authors = authors.filter(author => {
-                return authorIds.find(data => data.AuthorId === author.id);
+        if (findByBook) {
+            authors = authors.filter((author) => {
+                return authorIds.find((data) => data.AuthorId === author.id);
             });
         }
 
@@ -94,7 +92,7 @@ class AuthorServiceClass {
         };
     }
 
-    async getAuthorById(id) {
+    async getAuthorById({ id }) {
         return await Author.findByPk(id);
     }
 }

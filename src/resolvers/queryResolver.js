@@ -3,17 +3,16 @@ import { BookService } from "../services/bookService.js";
 
 export const queryResolver = {
     sayHello: () => "Hello World",
-    getBooks: async (parent, args, context) => {
-        console.log("context: ", context);
+    getBooks: async (_, args) => {
         return await BookService.getBooks(args);
     },
-    getBookById: async (parent, args) => {
-        return await BookService.getBookById(args.id);
+    getBookById: async (_, args) => {
+        return await BookService.getBookById(args);
     },
-    getAuthors: async (parent, args) => {
+    getAuthors: async (_, args) => {
         return await AuthorService.getAuthors(args);
     },
-    getAuthorById: async (parent, args) => {
-        return await AuthorService.getAuthorById(args.id);
+    getAuthorById: async (_, args) => {
+        return await AuthorService.getAuthorById(args);
     },
 };
