@@ -1,0 +1,92 @@
+scalar Date
+
+interface Node {
+    id: ID!
+}
+
+type Author implements Node {
+    id: ID!
+    name: String!
+    biography: String!
+    bornDate: Date!
+    books: [Book!]
+}
+
+type Book {
+    id: ID!
+    title: String!
+    description: String!
+    publishedDate: Date!
+    authors: [Author!]
+    reviewsAndRating: [BookReviewsAndRating!]
+}
+
+type BookReviewsAndRating {
+    id: ID!
+    bookId: ID!
+    userId: ID!
+    review: String!
+    rating: Int!
+}
+
+type BookPage {
+    books: [Book!]
+    totalPage: Int
+    currentPage: Int
+}
+
+type AuthorPage {
+    authors: [Author!]
+    totalPage: Int
+    currentPage: Int
+}
+
+input BookFilter {
+    authorId: ID
+    publishedDate: Date
+}
+
+input AuthorFilter {
+    bookId: ID
+    bornDate: Date
+}
+
+type Query {
+    sayHello: String
+    getBooks(filter: BookFilter, page: Int, limit: Int): BookPage
+    getBookById(id: ID!): Book
+    getAuthors(filter: AuthorFilter, page: Int, limit: Int): AuthorPage
+    getAuthorById(id: ID!): Author
+}
+
+type Mutation {
+    createBook(
+        title: String!
+        description: String!
+        publishedDate: Date!
+        authorIds: [ID!]
+    ): Book
+    updateBook(
+        id: ID!
+        title: String
+        description: String
+        publishedDate: Date
+        authorIds: [ID!]
+    ): Book
+    deleteBook(id: ID!): Book
+    createAuthor(name: String!, biography: String!, bornDate: Date!): Author
+    updateAuthor(
+        id: ID!
+        name: String
+        biography: String
+        bornDate: Date
+    ): Author
+    deleteAuthor(id: ID!): Author
+    addAuthorToBook(bookId: ID!, authorId: ID!): Book
+    addReviewAndRatingToBook(
+        bookId: ID!
+        userId: ID!
+        review: String!
+        rating: Int!
+    ): Book
+}
