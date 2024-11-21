@@ -1,6 +1,6 @@
 import { Sequelize } from "sequelize";
-import Book from "../models/Book.js";
-import Author from "../models/Author.js";
+import { Book } from "../models/index.js";
+import { Author } from "../models/index.js";
 import { BookReviewsAndRating } from "../models/metadata.js";
 import { v4 as uuid } from "uuid";
 import BookAuthor from "../models/BookAuthor.js";
